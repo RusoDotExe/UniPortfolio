@@ -9,5 +9,5 @@ This project is project aims to create tech that will record GPS and light data 
 ![](https://github.com/RusoDotExe/UniStuff/blob/main/StreetLights_IOT/Pictures/Node_red_flow.png)
 
 ## Final Result
-The red dots are the data that was gathered and the green dots are sample from the dataset
+The red dots are the data that was gathered and the green dots are sample from the dataset (this result could also be displayed at Node-Red UI)
 ![](https://github.com/RusoDotExe/UniStuff/blob/main/StreetLights_IOT/Pictures/Node_red_map.png)
