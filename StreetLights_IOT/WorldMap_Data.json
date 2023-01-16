@@ -1,0 +1,392 @@
+[
+    {
+        "id": "2094eea180ab19ee",
+        "type": "tab",
+        "label": "Street Lights",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "8999d7a5aee6ca64",
+        "type": "http request",
+        "z": "2094eea180ab19ee",
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://data.eindhoven.nl/api/records/1.0/search/?dataset=data-openbare-verlichting&q=&rows=300&facet=straatnaam_identificatie_mast&facet=stadsdeel&facet=wijk&facet=buurt&facet=straatnaam&facet=wegvak&facet=identificatie&facet=eigenaar&facet=identificatie_lamp&facet=type_lamp&facet=soort_lamp&facet=kleur_lamp&facet=wattage_lamp&facet=lumen_lamp&facet=ra_waarde_lamp&facet=fitting_lamp&facet=schakelschema_lamp&facet=type_armatuur&facet=datum_plaatsing_armatuur&facet=datum_onderhoud_armatuur&facet=identificatie_drager_mast&facet=type_drager_mast&facet=datum_plaatsing_drager_mast&facet=datum_onderhoud_drager_mast&facet=identificatie_drager_uithouder&facet=type_drager_uithouder&facet=datum_plaatsing_drager_uithoud&facet=datum_onderhoud_drager_uithoud&refine.stadsdeel=4+Woensel-Zuid",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 550,
+        "y": 40,
+        "wires": [
+            [
+                "7bf1bdba299b2139",
+                "d39eb1b05f6ecee0"
+            ]
+        ]
+    },
+    {
+        "id": "7bf1bdba299b2139",
+        "type": "debug",
+        "z": "2094eea180ab19ee",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 930,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "d6a6e1ef1dafa5ec",
+        "type": "inject",
+        "z": "2094eea180ab19ee",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "date",
+        "x": 320,
+        "y": 100,
+        "wires": [
+            [
+                "8999d7a5aee6ca64",
+                "d18f3bb51e7d2b6e"
+            ]
+        ]
+    },
+    {
+        "id": "d39eb1b05f6ecee0",
+        "type": "function",
+        "z": "2094eea180ab19ee",
+        "name": "",
+        "func": "msg.payload = msg.payload.records;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 40,
+        "wires": [
+            [
+                "7bf1bdba299b2139",
+                "f050c0e75f8180eb"
+            ]
+        ]
+    },
+    {
+        "id": "f050c0e75f8180eb",
+        "type": "split",
+        "z": "2094eea180ab19ee",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": "1",
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "payload",
+        "x": 1010,
+        "y": 40,
+        "wires": [
+            [
+                "118e79261d58b1ce",
+                "802ca25ab0f9950d"
+            ]
+        ]
+    },
+    {
+        "id": "118e79261d58b1ce",
+        "type": "debug",
+        "z": "2094eea180ab19ee",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1370,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "802ca25ab0f9950d",
+        "type": "function",
+        "z": "2094eea180ab19ee",
+        "name": "",
+        "func": "msg.payload = msg.payload.fields;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1160,
+        "y": 100,
+        "wires": [
+            [
+                "650c455d6b315390"
+            ]
+        ]
+    },
+    {
+        "id": "650c455d6b315390",
+        "type": "function",
+        "z": "2094eea180ab19ee",
+        "name": "",
+        "func": "let streetname = msg.payload.straatnaam_identificatie_mast;\nlet lat = msg.payload.geo_point_2d[0];\nlet lon = msg.payload.geo_point_2d[1];\nlet lumen = msg.payload.lumen_lamp;\n//let stadsdeel = msg.payload.fields.stadsdeel;\n//let kleur_lamp = msg.payload.fields.kleur_lamp;\nmsg.payload = { \"name\":streetname, \"lat\":lat, \"lon\":lon,\"lumen\":lumen,\"layer\":\"Street Lights\", \"iconColor\":\"#00FF00\"};\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1360,
+        "y": 100,
+        "wires": [
+            [
+                "3cde58fae9de204e",
+                "72e4fefeaa7b55b4"
+            ]
+        ]
+    },
+    {
+        "id": "3cde58fae9de204e",
+        "type": "ui_worldmap",
+        "z": "2094eea180ab19ee",
+        "group": "6447eb3ce6ebc2a5",
+        "order": 3,
+        "width": 26,
+        "height": 19,
+        "name": "",
+        "lat": "51.441642",
+        "lon": "5.4697225",
+        "zoom": "13",
+        "layer": "OSMG",
+        "cluster": "",
+        "maxage": "",
+        "usermenu": "show",
+        "layers": "hide",
+        "panit": "false",
+        "panlock": "false",
+        "zoomlock": "false",
+        "hiderightclick": "true",
+        "coords": "none",
+        "showgrid": "false",
+        "allowFileDrop": "false",
+        "path": "/worldmapui",
+        "overlist": "DR,CO,RA,DN,HM",
+        "maplist": "OSMG,OSMC,EsriC,EsriS,EsriT,EsriDG,UKOS,SW",
+        "mapname": "",
+        "mapurl": "",
+        "mapopt": "",
+        "mapwms": false,
+        "x": 1610,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "d0af3569c7ef6310",
+        "type": "ui_button",
+        "z": "2094eea180ab19ee",
+        "name": "Clear Map",
+        "group": "6447eb3ce6ebc2a5",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Clear Map",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "{\"command\": {\"clear\": \"Street Lights\" }}",
+        "payloadType": "json",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 1230,
+        "y": 180,
+        "wires": [
+            [
+                "3cde58fae9de204e",
+                "72e4fefeaa7b55b4"
+            ]
+        ]
+    },
+    {
+        "id": "b386a9719673572d",
+        "type": "ui_button",
+        "z": "2094eea180ab19ee",
+        "name": "",
+        "group": "6447eb3ce6ebc2a5",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Load Street Lights",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "{\"command\":{\"layer\":\"Street Lights\"}}",
+        "payloadType": "json",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 310,
+        "y": 160,
+        "wires": [
+            [
+                "8999d7a5aee6ca64",
+                "d18f3bb51e7d2b6e"
+            ]
+        ]
+    },
+    {
+        "id": "55fab1e81d51476a",
+        "type": "comment",
+        "z": "2094eea180ab19ee",
+        "name": "API version 2",
+        "info": "",
+        "x": 310,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "b08c0d5ca8db778c",
+        "type": "inject",
+        "z": "2094eea180ab19ee",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"name\":\"Jason\",\"lat\":51.440482,\"lon\":5.475735}",
+        "payloadType": "json",
+        "x": 550,
+        "y": 240,
+        "wires": [
+            [
+                "d18f3bb51e7d2b6e"
+            ]
+        ]
+    },
+    {
+        "id": "d18f3bb51e7d2b6e",
+        "type": "file in",
+        "z": "2094eea180ab19ee",
+        "name": "File",
+        "filename": "D:\\Uni\\SI4\\IoT\\Streetlights\\dummyGeojson\\lightData1.txt",
+        "filenameType": "str",
+        "format": "lines",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 910,
+        "y": 240,
+        "wires": [
+            [
+                "cfb61335dc416764"
+            ]
+        ]
+    },
+    {
+        "id": "cfb61335dc416764",
+        "type": "json",
+        "z": "2094eea180ab19ee",
+        "name": "conver to geojson object",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 1190,
+        "y": 240,
+        "wires": [
+            [
+                "3cde58fae9de204e",
+                "72e4fefeaa7b55b4"
+            ]
+        ]
+    },
+    {
+        "id": "72e4fefeaa7b55b4",
+        "type": "worldmap",
+        "z": "2094eea180ab19ee",
+        "name": "",
+        "lat": "",
+        "lon": "",
+        "zoom": "",
+        "layer": "",
+        "cluster": "",
+        "maxage": "",
+        "usermenu": "show",
+        "layers": "show",
+        "panit": "false",
+        "panlock": "false",
+        "zoomlock": "false",
+        "hiderightclick": "false",
+        "coords": "false",
+        "showgrid": "false",
+        "showruler": "false",
+        "allowFileDrop": "false",
+        "path": "/worldmap",
+        "overlist": "DR,CO,RA,DN,HM",
+        "maplist": "OSMG,OSMC,EsriC,EsriS,EsriT,EsriDG,UKOS",
+        "mapname": "",
+        "mapurl": "",
+        "mapopt": "",
+        "mapwms": false,
+        "x": 1600,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "6447eb3ce6ebc2a5",
+        "type": "ui_group",
+        "name": "Street Lights",
+        "tab": "89f9f5250c3dba5f",
+        "order": 2,
+        "disp": true,
+        "width": 26,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "89f9f5250c3dba5f",
+        "type": "ui_tab",
+        "name": "Street Lights Map",
+        "icon": "dashboard",
+        "order": 5,
+        "disabled": false,
+        "hidden": false
+    }
+]
