@@ -8,6 +8,7 @@ This project is project aims to create tech that will record GPS and light data 
 - SD Card Reader
 - Simple light sensor
 - 10k Ohm resistor
+##
 ![](https://github.com/RusoDotExe/UniStuff/blob/main/StreetLights_IOT/Pictures/Hardware.jpg)
 
 ## Node-Red Flow
